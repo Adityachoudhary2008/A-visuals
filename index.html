@@ -57,6 +57,7 @@
         radial-gradient(500px 350px at 90% 90%, rgba(255,193,66,.04), transparent),
         var(--bg);
       line-height:1.6;
+      overflow-x: hidden;
     }
 
     /* ========= CONTAINER ========= */
@@ -92,13 +93,53 @@
     .btn{padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:transparent;color:var(--text);cursor:pointer}
     .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#071428;border:none;font-weight:800}
 
-    .menu-btn{display:none;background:transparent;border:none;color:var(--text);font-size:20px}
+    .menu-btn{display:none;background:transparent;border:none;color:var(--text);font-size:20px;z-index:70;cursor:pointer}
 
-    @media(max-width:860px){
-      .nav-links{display:none}
+    /* Mobile menu styles */
+    @media(max-width:768px){
+      .nav-links{
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        background: var(--card);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 28px;
+        transition: right 0.3s ease;
+        z-index: 50;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+        padding: 20px;
+      }
+      
+      .nav-links.show{
+        right: 0;
+      }
+      
       .menu-btn{display:block}
-      /* when JS toggles .show, display vertical menu */
-      .nav-links.show{display:flex;flex-direction:column;gap:12px;background:transparent;padding:8px 0;}
+      
+      .nav-inner {
+        flex-wrap: wrap;
+      }
+      
+      /* Overlay when menu is open */
+      .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        z-index: 40;
+        display: none;
+      }
+      
+      .nav-overlay.show {
+        display: block;
+      }
     }
 
     /* ========= HERO ========= */
@@ -123,25 +164,22 @@
     /* ========= WORKS GRID ========= */
     .works{margin-top:34px}
     .works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .work{border-radius:12px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.04);cursor:pointer}
+    .work{border-radius:12px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.04);cursor:pointer;transition: transform 0.3s ease, box-shadow 0.3s ease;}
     .work img{width:100%;height:320px;object-fit:cover;display:block}
     .work .meta{position:absolute;left:12px;bottom:12px;color:#fff;font-weight:700;background:linear-gradient(90deg, rgba(0,0,0,.45), transparent);padding:8px 12px;border-radius:10px}
     .work:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
 
-    @media(max-width:1024px){.works-grid{grid-template-columns:repeat(2,1fr)}.hero-grid{grid-template-columns:1fr}}
-    @media(max-width:640px){.works-grid{grid-template-columns:1fr}.about{grid-template-columns:1fr}.nav-inner{flex-direction:column;gap:10px}.hero-grid{grid-template-columns:1fr}.menu-btn{display:block}}
-
     /* ========= PORTFOLIO MODAL ========= */
-    .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);z-index:120}
+    .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);z-index:120;padding: 20px;}
     .modal.open{display:grid}
-    .modal-card{background:var(--card);max-width:920px;width:94%;border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,.04)}
-    .modal-card img{width:100%;height:520px;object-fit:cover;border-radius:8px}
-    .modal-close{position:absolute;top:18px;right:20px;background:transparent;border:none;color:var(--text);font-size:22px}
+    .modal-card{background:var(--card);max-width:920px;width:94%;border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,.04);position: relative;}
+    .modal-card img{width:100%;height:520px;object-fit:contain;border-radius:8px}
+    .modal-close{position:absolute;top:18px;right:20px;background:transparent;border:none;color:var(--text);font-size:22px;cursor:pointer;z-index:121;}
 
     /* ========= CONTACT ========= */
     .contact{margin-top:36px;display:grid;grid-template-columns:1fr 360px;gap:18px}
     form{display:grid;gap:12px}
-    input,textarea{background:transparent;border:1px solid rgba(255,255,255,.06);padding:12px;border-radius:10px;color:var(--text)}
+    input,textarea{background:transparent;border:1px solid rgba(255,255,255,.06);padding:12px;border-radius:10px;color:var(--text);width: 100%;}
     textarea{min-height:140px}
 
     /* ========= FOOTER ========= */
@@ -153,6 +191,92 @@
 
     /* small tweaks */
     .muted{color:var(--muted)}
+    
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .works-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      
+      .hero-card {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .about {
+        grid-template-columns: 1fr;
+      }
+      
+      .contact {
+        grid-template-columns: 1fr;
+      }
+      
+      .works-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .hero {
+        padding: 40px 0 28px;
+      }
+      
+      .actions {
+        flex-wrap: wrap;
+      }
+      
+      .nav-inner {
+        flex-direction: row;
+      }
+      
+      footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+      
+      .modal-card img {
+        height: auto;
+        max-height: 70vh;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 16px;
+      }
+      
+      h1 {
+        font-size: 32px;
+      }
+      
+      .hero-grid {
+        gap: 24px;
+      }
+      
+      .chip {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+      }
+      
+      .work img {
+        height: 280px;
+      }
+      
+      .brand .logo-wrap {
+        width: 42px;
+        height: 42px;
+      }
+      
+      .brand .title {
+        font-size: 0.95rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -162,27 +286,30 @@
       <div class="nav-inner">
         <div class="brand">
           <div class="logo-wrap">
-            <!-- logo placeholder -->
-            <img src="C:\Users\Hp\Pictures\Screenshots\Screenshot 2025-08-25 161439.png" id="brandLogo" />
+            <!-- Use a web-friendly image path -->
+            <img src="C:\Users\Hp\Pictures\Screenshots\Screenshot 2025-08-25 161439.png" id="brandLogo" alt="Aditya Visuals Logo" />
           </div>
           <div style="display:flex;flex-direction:column">
-            <div class="title">Aditya Visuals</div>
+            <div class="title">A Visuals</div>
             <div style="font-size:.78rem;color:var(--muted)">Creative Graphics & Brand Design</div>
           </div>
         </div>
 
         <div style="display:flex;align-items:center;gap:10px">
           <div class="nav-links" id="navLinks">
-            <a href="#home">Home</a>
-            <a href="#works">Work</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#works" class="nav-link">Work</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#contact" class="nav-link">Contact</a>
           </div>
           <button class="btn" id="themeToggle" title="Toggle theme">🌙</button>
           <button class="menu-btn" id="menuBtn">☰</button>
         </div>
       </div>
     </nav>
+    
+    <!-- Mobile menu overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
 
     <!-- HERO -->
     <header class="hero" id="home">
@@ -190,7 +317,7 @@
         <div>
           <div class="kicker">Logo · Poster · Social · Thumbnails</div>
           <h1 class="reveal">I craft bold visuals that make brands <span style="background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">unforgettable</span></h1>
-          <p class="lead reveal muted">I’m Aditya — a graphics designer building high-impact visual identities for startups, creators and local businesses. Clean concepts, fast delivery, premium look.</p>
+          <p class="lead reveal muted">I'm Aditya — a graphics designer building high-impact visual identities for startups, creators and local businesses. Clean concepts, fast delivery, premium look.</p>
           <div class="actions reveal">
             <a class="btn primary" href="#works">View Work</a>
             <a class="btn" href="#contact">Start Project</a>
@@ -207,7 +334,8 @@
 
         <div class="hero-card reveal">
           <div class="portrait">
-            <img src="C:\Users\Hp\Pictures\IMG_20250707_214627.jpg" alt="Aditya portrait" id="portraitImg" />
+            <!-- Use a web-friendly image path -->
+            <img src="C:\Users\Hp\Pictures\A Visuals\Logopit_1756115392785.png" alt="Aditya portrait" id="portraitImg" />
           </div>
         </div>
       </div>
@@ -220,28 +348,28 @@
         <div class="muted">Click to open project</div>
       </div>
       <div class="works-grid">
-        <div class="work" data-src="work1.jpg">
-          <img src="C:\Users\Hp\Pictures\A Visuals\Untitled design.png" alt="Work 1"/>
+        <div class="work" data-src="">
+          <img src="https://via.placeholder.com/800" alt="Work 1"/>
           <div class="meta">Brand Identity • Logo</div>
         </div>
-        <div class="work" data-src="work2.jpg">
-          <img src="C:\Users\Hp\Pictures\A Visuals\Screenshot 2025-08-25 155959.png" alt="Work 2"/>
+        <div class="work" data-src="https://via.placeholder.com/800">
+          <img src="https://via.placeholder.com/800" alt="Work 2"/>
           <div class="meta">Event Poster • Print</div>
         </div>
-        <div class="work" data-src="work3.jpg">
-          <img src="C:\Users\Hp\Pictures\A Visuals\Screenshot 2025-08-25 155220.png" alt="Work 3"/>
+        <div class="work" data-src="https://via.placeholder.com/800">
+          <img src="https://via.placeholder.com/800" alt="Work 3"/>
           <div class="meta">Social Campaign</div>
         </div>
-        <div class="work" data-src="work4.jpg">
-          <img src="work4.jpg" alt="Work 4"/>
+        <div class="work" data-src="https://via.placeholder.com/800">
+          <img src="https://via.placeholder.com/800" alt="Work 4"/>
           <div class="meta">YouTube Thumbnails</div>
         </div>
-        <div class="work" data-src="work5.jpg">
-          <img src="work5.jpg" alt="Work 5"/>
+        <div class="work" data-src="https://via.placeholder.com/800">
+          <img src="https://via.placeholder.com/800" alt="Work 5"/>
           <div class="meta">Business Collaterals</div>
         </div>
-        <div class="work" data-src="work6.jpg">
-          <img src="work6.jpg" alt="Work 6"/>
+        <div class="work" data-src="https://via.placeholder.com/800">
+          <img src="https://via.placeholder.com/800" alt="Work 6"/>
           <div class="meta">Landing Concept</div>
         </div>
       </div>
@@ -252,7 +380,7 @@
       <h2>About Me</h2>
       <div class="about">
         <div class="card">
-          <p class="muted">I’m a diploma CSE student and a passionate graphics designer. I focus on visual clarity, brand consistency and results — designs that convert and create recall. I offer: logo systems, social packs, event posters, thumbnail packages and brand kits.</p>
+          <p class="muted">I'm a diploma CSE student and a passionate graphics designer. I focus on visual clarity, brand consistency and results — designs that convert and create recall. I offer: logo systems, social packs, event posters, thumbnail packages and brand kits.</p>
           <div style="margin-top:14px">
             <strong>Availability:</strong> 1 hour/day (fast turnaround for small projects)
           </div>
@@ -274,7 +402,7 @@
     <section id="contact" class="reveal">
       <h2>Let's Talk</h2>
       <div class="contact">
-        <form action="https://formspree.io/f/your-form-id" method="POST" class="card">
+        <form action="https://formspree.io/f/xrbagzrq" method="POST" class="card">
           <input type="text" name="name" placeholder="Your name" required />
           <input type="email" name="email" placeholder="Email" required />
           <input type="text" name="subject" placeholder="Project type (Logo / Poster)" />
@@ -295,9 +423,9 @@
 
     <!-- FOOTER -->
     <footer class="reveal">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;flex-wrap:wrap;">
         <div class="muted">© 2025 Aditya Visuals · Aditya Kumar</div>
-        <div style="display:flex;gap:10px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <a class="btn" href="#">Instagram</a>
           <a class="btn" href="#">Behance</a>
           <a class="btn" href="#">Fiverr</a>
@@ -318,7 +446,26 @@
     // Mobile menu toggle
     const menuBtn = document.getElementById('menuBtn');
     const navLinks = document.getElementById('navLinks');
-    menuBtn?.addEventListener('click', ()=> navLinks.classList.toggle('show'));
+    const navOverlay = document.getElementById('navOverlay');
+    const navLinkItems = document.querySelectorAll('.nav-link');
+    
+    function toggleMenu() {
+      navLinks.classList.toggle('show');
+      navOverlay.classList.toggle('show');
+      document.body.style.overflow = navLinks.classList.contains('show') ? 'hidden' : '';
+    }
+    
+    menuBtn?.addEventListener('click', toggleMenu);
+    navOverlay?.addEventListener('click', toggleMenu);
+    
+    // Close menu when clicking on nav links
+    navLinkItems.forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('show');
+        navOverlay.classList.remove('show');
+        document.body.style.overflow = '';
+      });
+    });
 
     // Theme toggle + persist (uses documentElement to match early script)
     const themeBtn = document.getElementById('themeToggle');
@@ -357,13 +504,24 @@
         modalImg.src = src;
         modal.classList.add('open');
         modal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
       });
     });
-    modalClose?.addEventListener('click', ()=>{ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); modalImg.src = ''; });
-    modal.addEventListener('click', (e)=>{ if(e.target === modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); modalImg.src = ''; }});
+    
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      modalImg.src = '';
+      document.body.style.overflow = '';
+    }
+    
+    modalClose?.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
 
     // keyboard esc close
-    document.addEventListener('keydown', e=>{ if(e.key==='Escape') { modal.classList.remove('open'); modalImg.src = ''; } });
+    document.addEventListener('keydown', e=>{ 
+      if(e.key==='Escape') closeModal();
+    });
   </script>
 </body>
 </html>
